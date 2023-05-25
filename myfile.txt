@@ -1,2 +1,7 @@
 This is a file I want to include.
-Neuer Test
+<<<<<<< HEAD
+Neuer Test 2
+=======
+Test
+Hello World!
+>>>>>>> 9eda03e283a2f7b2fe727c377b02f220a86173e0
