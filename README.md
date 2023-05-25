@@ -2,6 +2,8 @@
 
 This repository is created for demonstration purposes. Version control with Git and GitHub is taught in the [Digital Causality Lab](https://digitalcausalitylab.github.io/).
 
+I used the demo-repo template.
+
 ## First steps in GitHub
 
 Participants of the [Digital Causality Lab](https://digitalcausalitylab.github.io/) should use this repo as a template and do the following steps.
