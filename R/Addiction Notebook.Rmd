@@ -4,6 +4,8 @@ author: "M.Grundmann"
 date: "2023-06-01"
 output: word_document
 ---
+Hier wurden zunächst die benötigten Packages installiert und das hdm Package bereits geladen.
+
 ```{r}
 # Install package with name "hdm"
 install.packages("hdm")
@@ -12,16 +14,20 @@ install.packages("tidyverse", dependencies = TRUE)
 install.packages("lmtest", dependencies = TRUE)
 install.packages("sandwich", dependencies = TRUE)
 install.packages("MatchIt", dependencies = TRUE)
+
 ```
+
+Hier wurden die übrigen Packages ebenfalls geladen. 
+Neuer Test
+
 ```{r}
 library ("lmtest")
 library ("sandwich")
 library ("MatchIt")
 ```
+
+Der benötigte Datensatz wurde geladen.
+
 ```{r}
-smk_data <- load ("https://raw.githubusercontent.com/gckc123/Causal_Analysis_Addiction_Examples/main/smoking_psyc_distress.csv")
+smk_data <- read.csv("https://raw.githubusercontent.com/gckc123/Causal_Analysis_Addiction_Examples/main/smoking_psyc_distress.csv")
 ```
-
-
-
-
