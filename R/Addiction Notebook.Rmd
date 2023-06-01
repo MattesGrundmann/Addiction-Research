@@ -1,0 +1,27 @@
+---
+title: "KaI"
+author: "M.Grundmann"
+date: "2023-06-01"
+output: word_document
+---
+```{r}
+# Install package with name "hdm"
+install.packages("hdm")
+library("hdm")
+install.packages("tidyverse", dependencies = TRUE)
+install.packages("lmtest", dependencies = TRUE)
+install.packages("sandwich", dependencies = TRUE)
+install.packages("MatchIt", dependencies = TRUE)
+```
+```{r}
+library ("lmtest")
+library ("sandwich")
+library ("MatchIt")
+```
+```{r}
+smk_data <- load ("https://raw.githubusercontent.com/gckc123/Causal_Analysis_Addiction_Examples/main/smoking_psyc_distress.csv")
+```
+
+
+
+
