@@ -10,7 +10,12 @@
 
 ### Abstract
 
-- [ ] Insert a brief description of the goals and results of your case study (around 250 words, English)
+Randomized controlled trials (RCTs) are the gold standard for making causal inferences,
+but RCTs are often not feasible in addiction research for ethical and logistic reasons.
+Observational data from real-world settings have been increasingly used to guide clinical
+decisions and public health policies. This paper introduces the potential outcomes framework for causal inference and summarizes well-established causal analysis methods for observational data, including matching, inverse probability treatment weighting, the
+instrumental variable method and interrupted time-series analysis with controls. It provides examples in addiction research and guidance and analysis codes for conducting these analyses with example data sets.
+
 - [ ] You can upload and include figures, too
 
 ### Current State and Call for Extension
