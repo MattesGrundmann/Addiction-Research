@@ -1,0 +1,31 @@
+---
+title: "KausInf"
+author: "M.Grundmann"
+date: "2023-06-07"
+output: word_document
+---
+```{r}
+install.packages("tidyverse", dependencies = TRUE)
+install.packages("lmtest", dependencies = TRUE)
+install.packages("sandwich", dependencies = TRUE)
+install.packages("MatchIt", dependencies = TRUE
+```
+```{r}
+library("tidyverse")
+library("lmtest")
+library("sandwich")
+library("MatchIt") 
+```
+```{r}
+smk_data <- read_csv("https://raw.githubusercontent.com/gckc123/Causal_Analysis_Addiction_Examples/main/smoking_psyc_distress.csv")
+```
+```{r}
+smk_data$remoteness <- as.factor(smk_data$remoteness)
+```
+
+```{r}
+smk_matching <- matchit(smoker ~ sex + indigeneity + high_school + partnered + remoteness + language + risky_alcohol + age, data = smk_data, method = "optimal", distance = "glm")
+summary(smk_matching)
+```
+
+
