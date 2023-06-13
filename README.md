@@ -18,6 +18,11 @@ instrumental variable method and interrupted time-series analysis with controls.
 
 - [ ] You can upload and include figures, too
 
+### Background
+### Explanation Matching and Inverse Probability Weighting
+### Results & Interpretation
+
+
 ### Current State and Call for Extension
 
 - [ ] Briefly summarize the state of your data product as of the end of the course
