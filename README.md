@@ -29,6 +29,8 @@ Auch beim IPTW ist es das Ziel, ein Gleichgewicht zwischen der Treatment und Kon
 
 ![](figures/Matching_IPW.png)
 
+#### Instrumental Variable Method
+
 
 ### Results & Interpretation
 
