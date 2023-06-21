@@ -32,6 +32,8 @@ Auch beim IPTW ist es das Ziel, ein Gleichgewicht zwischen der Treatment und Kon
 #### Instrumental Variable Method
 
 
+
+
 ### Results & Interpretation
 
 
