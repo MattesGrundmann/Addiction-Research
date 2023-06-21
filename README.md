@@ -36,7 +36,8 @@ Bei dieser Methode wird eine Intrumentalvariable gesucht, welche (i) einen direk
 
 ![](figures/Instrumentalvariable.png)
 
-
+Die Methode zur Bestimmmung eines kausalen Effektes funktioniert nach dem folgenden Prinzip: 
+Ist eine Instrumentalvariable identifiziert worden, kann über eine Regression (kleinste Quadrate Methode) für jeden Induviduum die counfounding freie Ausprägung des Treatments geschätzt werden, auf Basis derer durch eine weitere Regression der kausale Effekt auf das Ergebnis geschätzt werden kann. 
 
 ### Results & Interpretation
 
