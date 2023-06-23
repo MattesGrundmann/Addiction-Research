@@ -39,7 +39,7 @@ Bei dieser Methode wird eine Intrumentalvariable gesucht, welche (i) einen direk
 Die Methode zur Bestimmmung eines kausalen Effektes funktioniert nach dem folgenden Prinzip: 
 Ist eine Instrumentalvariable identifiziert worden, kann über eine Regression (kleinste Quadrate Methode) für jeden Induviduum die counfounding freie Ausprägung des Treatments geschätzt werden, auf Basis derer durch eine weitere Regression der kausale Effekt auf das Ergebnis geschätzt werden kann. Das Ausfindigmachen einer Instrumentalvariable stellt die größte Schwierigkeit dieser Methode dar. 
 
-### Interrupted Time-Series Analysis
+#### Interrupted Time-Series Analysis
 
 Unter Verwendung von Daten aus wiederholten Beobachtungen eines Ergebnisses wird in einer unterbrochenen Zeitreihenanalyse (ITSA) die Entwicklung des Ergebnisses vor und nach der Intervention.
 Dies kann konzeptualisiert werden auf der Grundlage des kontrafaktischen Rahmens als Vergleich dessen was ohne die Intervention geschehen wäre (ein kontrafaktisches Szenario) mit dem, was nach einer Intervention beobachtet wurde. 
