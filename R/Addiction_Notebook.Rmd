@@ -16,20 +16,27 @@ library("lmtest")
 library("sandwich")
 library("MatchIt") 
 ```
+#Es wurden die benötigten Packages installiert und geladen
+#benötigter Datensatz wird anschließend geladen
 ```{r}
 smk_data <- read_csv("https://raw.githubusercontent.com/gckc123/Causal_Analysis_Addiction_Examples/main/smoking_psyc_distress.csv")
 ```
 ```{r}
 smk_data$remoteness <- as.factor(smk_data$remoteness)
 ```
-
+#Matching Funktion wird ausgeführt, um die Gruppen vergleichbar zu machen.
 ```{r}
 smk_matching <- matchit(smoker ~ sex + indigeneity + high_school + partnered + remoteness + language + risky_alcohol + age, data = smk_data, method = "optimal", distance = "glm")
+
+#Um die Daten komprimiert auszugeben wird hier die summary Funktion für den gematchen Datensatz angewendet.
 summary(smk_matching)
 ```
+#Anschließend werden die Daten für mehr Übersichtlichkeit geplottet, man sieht, dass die Mean Difference jetzt deutlich geringer geworden ist.
 ```{r}
 plot(summary(smk_matching), abs=FALSE)
 ```
+
+#Nachdem die Gruppen vergleichbar gemacht wurden, wird jetzt mittels Regression etc. der Effect von Rauchen auf Psyche gemessen.
 ```{r}
 matched_data <- match.data(smk_matching)
 smk_model1 <- lm(psyc_distress ~ smoker, data = matched_data, weights = weights)
@@ -37,6 +44,8 @@ summary(smk_model1)
 coeftest(smk_model1, vcov. = vcovCL, cluster = ~subclass)
 coefci(smk_model1, vcov. = vcovCL, cluster = ~subclass, level = 0.95)
 ```
+
+
 ```{r}
 smk_model2 <- lm(psyc_distress ~ smoker + sex + indigeneity + high_school + partnered + remoteness + language + risky_alcohol + age, data = matched_data, weights = weights)
 summary(smk_model2)
@@ -62,7 +71,7 @@ smk_data <- read_csv("https://raw.githubusercontent.com/gckc123/Causal_Analysis_
 
 smk_data$remoteness <- as.factor(smk_data$remoteness)
 
-#IPTW
+#Es beginnt der Teil für IPTW
 
 smk_iptw <- ps(smoker ~ sex + indigeneity + high_school + partnered + remoteness + language + risky_alcohol + age, interaction.depth = 3, data = as.data.frame(smk_data), n.tree = 10000, estimand = "ATE", verbose = FALSE)
 
@@ -74,7 +83,7 @@ bal.table(smk_iptw)
 
 smk_data$weight <- get.weights(smk_iptw, stop.method = "es.mean")
 
-#estimate the treatment effect
+#Schätzung des Treatment Effekts
 
 design_iptw <- svydesign(ids = ~1, weights = ~weight, data = smk_data)
 smk_model3 <- svyglm(psyc_distress ~ smoker, design = design_iptw)
