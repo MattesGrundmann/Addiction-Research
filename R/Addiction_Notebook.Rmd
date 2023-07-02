@@ -2,17 +2,19 @@
 title: "KausInf"
 author: "Mattes Grundmann, Oya Bazer, Jakob Zschocke"
 date: "2023-06-07"
-output: word_document
+output: html_document
 ---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
 
-```{r}
-install.packages("tidyverse", dependencies = TRUE)
-install.packages("lmtest", dependencies = TRUE)
-install.packages("sandwich", dependencies = TRUE)
-install.packages("MatchIt", dependencies = TRUE)
-install.packages("twang", dependencies = TRUE)
-install.packages("nlme", dependencies = TRUE)
-install.packages("ggplot2", dependencies = TRUE)
+install.packages("tidyverse", dependencies = TRUE, repos = "https://CRAN.R-project.org/package=tidyverse")
+install.packages("lmtest", dependencies = TRUE, repos = "https://CRAN.R-project.org/package=lmtest")
+install.packages("sandwich", dependencies = TRUE, repos = "https://CRAN.R-project.org/package=sandwich")
+install.packages("MatchIt", dependencies = TRUE, repos = "https://CRAN.R-project.org/package=MatchIt")
+install.packages("twang", dependencies = TRUE, repos = "https://CRAN.R-project.org/package=twang")
+install.packages("nlme", dependencies = TRUE, repos = "https://CRAN.R-project.org/package=nlme")
+install.packages("ggplot2", dependencies = TRUE, repos = "https://CRAN.R-project.org/package=ggplot2")
+install.packages("tsModel", dependencies = TRUE, repos = "https://CRAN.R-project.org/package=tsModel")
 ```
 
 ```{r}
@@ -24,6 +26,7 @@ library(twang)
 library(survey)
 library(nlme)
 library(ggplot2)
+library(tsModel)
 ```
 
 #Es wurden die benötigten Packages installiert und geladen #benötigter Datensatz wird anschließend geladen
@@ -96,57 +99,7 @@ smk_model4 <- svyglm(psyc_distress ~ smoker + sex + indigeneity + high_school + 
 summary(smk_model4)
 confint(smk_model4)
 ```
-
-```{r}
-#load the data from GitHub
-alc_data <- read_csv("https://raw.githubusercontent.com/gckc123/Causal_Analysis_Addiction_Examples/main/home_alc.csv")
-
-#IPTW
-
-alc_iptw <- iptw(list(home_alc_2 ~ home_alc_1 + alc_use1 + alc_peer1 + smk1,
-                      home_alc_3 ~ alc_use2 + alc_peer2 + smk2,
-                      home_alc_4 ~ alc_use3 + alc_peer3 + smk3),
-                 timeInvariant ~ sex,
-                 data = as.data.frame(alc_data),
-                 cumulative = TRUE,
-                 priorTreatment = TRUE,
-                 stop.method = "es.max",
-                 n.trees = 10000)
-
-plot(alc_iptw, plots = 1)
-```
-
-```{r}
-#probably to be taken out from here (till itsa)
-bal.table(alc_iptw)
-```
-
-```{r}
-#extract the unstabilised weights
-alc_data$unstab_weight <- get.weights.unstab(alc_iptw, stop.method = "es.mean")[,1]
-
-#calculate the numerators of stabilised weights
-num_fm <- list(glm(home_alc_2 ~ 1, family = binomial, data = alc_data),
-               glm(home_alc_3 ~ home_alc_2, family = binomial, data = alc_data),
-               glm(home_alc_4 ~ home_alc_2 + home_alc_3, family = binomial, data = alc_data))
-
-num_weights <- get.weights.num(alc_iptw, num_fm)
-
-alc_data$stab_weight <- num_weights* alc_data$unstab_weight
-
-#calculate the cumulative exposure
-alc_data$total_home_alc = alc_data$home_alc_2 + alc_data$home_alc_3 + alc_data$home_alc_4 
-alc_data$total_home_alc = as.factor(alc_data$total_home_alc)
-
-#estimate the treatment effect
-design_iptw <- svydesign(ids = ~1, weights = ~stab_weight, data = alc_data)
-alc_model <- svyglm(adult_alc_risky ~ total_home_alc, design = design_iptw, family = binomial)
-summary(alc_model)
-exp(coef(alc_model))
-exp(confint(alc_model))
-```
-
-#In this part, the effect of the minimum alcohol pricing on alcohol consumption at the population level is estimated in Northern Territory, Australia, using interrupted time series analysis.
+In this part, the effect of the minimum alcohol pricing on alcohol consumption at the population level is estimated in Northern Territory, Australia, using interrupted time series analysis.
 
 ```{r}
 #load the dataset
@@ -193,6 +146,7 @@ alc_mup_data$predicted <- res$fitted
 
 #generating the interaction for ggplots
 groups = interaction(alc_mup_data$intervention,alc_mup_data$state)
+
 #ploting the time series
 plot <- ggplot() +
   geom_point(data = alc_mup_data, aes(y = alcohol, x = time, color = state)) +
@@ -203,18 +157,18 @@ plot <- ggplot() +
   theme(legend.position = "bottom")
 plot
 ```
-
+#Our model has accounted for lag-1 autocorrelation. We can evaluate if this is sufficient using the partial auto-correlation function. The acf() can be used with the type parameter set to "partial". In this analysis, we will need to plot the auto-correlation function for Western Australia and Northern Territory separately.
 ```{r}
 #extract the residuals
 alc_mup_data$residuals <- residuals(res)
 
-#Our model has accounted for lag-1 autocorrelation. We can evaluate if this is sufficient using the partial auto-correlation function. The acf() can be used with the type parameter set to "partial". In this analysis, we will need to plot the auto-correlation function for Western Australia and Northern Territory separately.
-acf(alc_mup_data[alc_mup_data$state == "NT",]$residuals, type = "partial")
-acf(alc_mup_data[alc_mup_data$state == "WA",]$residuals, type = "partial")
+#plotting the partial ACF
+pacf(alc_mup_data[alc_mup_data$state == "NT",]$residuals)
+pacf(alc_mup_data[alc_mup_data$state == "WA",]$residuals)
 ```
-
+Autocorrelation measures how a variable is related to its past values and is a way to assess if there is a pattern or dependency within a time series.
 ```{r}
-#refit the model with lag-4 auto-correlation
+#Both PACF plots suggest that we should adjust for up to the lag-4 auto-correlation. The analysis can be rerun by setting the p parameter to 4, as follow.
 
 res2 <- gls(alcohol ~ time*intervention*state,
             data = alc_mup_data,
@@ -225,11 +179,7 @@ summary(res2)
 ```{r}
 #adjust for seasonality
 
-#install the tsModel library
-install.packages("tsModel", dependencies = TRUE)
 
-#load the tsModel library
-library(tsModel)
 
 #The harmonic function is used to calculate the harmonic terms calculate based on sine and cosine function
 #the first parameter of this function specifies the time variable
@@ -247,7 +197,7 @@ summary(res)
 ```
 
 ```{r}
-#calcluate the predicted value
+#calculate the predicted value
 alc_mup_data$predicted <- res$fitted
 groups = interaction(alc_mup_data$intervention,alc_mup_data$state)
 
