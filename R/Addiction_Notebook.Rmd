@@ -51,7 +51,11 @@ smk_data$remoteness <- as.factor(smk_data$remoteness)
 ```
 Method 1: Matching
 Explanation: 
-#Matching Funktion wird ausgeführt, um die Gruppen vergleichbar zu machen.
+The goal of matching is to establish the balance between treatment and control group, as it generally is in RTCs. Specificly, it targets similar distributions of all observed covariates in both treatment and control group. A variant of matching is one-to-one matching which matches each individual in the treatment group with an individual in the control group based on a propensity score. This score represents the probability of receiving the treatment, measured by all variables that can influence it. It is often estimated using logistic regression with pretreatment covariates. Unmatched individuals will be excluded. After matching, the Average Treatment effect among the Treated (ATT) can now be calculated using simple regression.
+
+The following example illustrates estimating the causal effect of smoking on pychological distress:
+
+Primarly, all smokers need to be matched with smokers from the control group. 
 ```{r}
 smk_matching <- matchit(smoker ~ sex + indigeneity + high_school + partnered + remoteness + language + risky_alcohol + age, data = smk_data, method = "optimal", distance = "glm")
 
