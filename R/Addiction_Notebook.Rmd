@@ -4,7 +4,10 @@ author: "Mattes Grundmann, Oya Bazer, Jakob Zschocke"
 date: "2023-06-07"
 output: word_document
 ---
-
+Einleitung: 
+Zwar sind Randomisiert Kontrollierte Studien (RCTs) der Goldstandard für kausale Schlussfolgerungen, diese sind in der Suchtforschung aber oftmals aus ethischen Grunden nicht durchführtbar; so beispielsweise bei der Untersuchung der Auswirkung des Rauchens auf Krebserkrankungen. 
+Stattdessen werden Beobachtungsdaten aus der realen Welt zunehmend als Grundlage für klinische Entscheidungen und gesundheitspolitische Maßnahmen verwendet. In diesem Beitrag wird der Rahmen für potenzielle Ergebnisse für kausale Schlussfolgerungen vorgestellt und es werden bewährte Methoden der Kausalanalyse für Beobachtungsdaten zusammengefasst. Darunter: Matching, Inverse Probability Weighting (IPW) und Interrupted Time-Series Analysis (ITSA). 
+Diese Methoden werden anhand von Beispielen aus der Suchtforschung erläutert sowie die daraus entstandenen Ergebnisse verglichen. 
 ```{r}
 install.packages("tidyverse", dependencies = TRUE)
 install.packages("lmtest", dependencies = TRUE)
