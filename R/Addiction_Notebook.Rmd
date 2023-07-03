@@ -16,6 +16,8 @@ install.packages("MatchIt", dependencies = TRUE)
 install.packages("twang", dependencies = TRUE)
 install.packages("nlme", dependencies = TRUE)
 install.packages("ggplot2", dependencies = TRUE)
+
+Nicht nötig, die Packages zu erklären oder Libraries zu erklären oder?
 ```
 
 ```{r}
@@ -34,12 +36,25 @@ library(ggplot2)
 ```{r}
 smk_data <- read_csv("https://raw.githubusercontent.com/gckc123/Causal_Analysis_Addiction_Examples/main/smoking_psyc_distress.csv")
 ```
+Variablen:
+Sex: 0: Female; 1: Male
+Indigeneity: 0: non-indigenous; 1: indigenous
+High_school: 0: not completed high school; 1: completed high school
+Partnered: 0: not partnered; 1: partnered
+Remoteness: Remoteness of an individual’s residence. 0: major cities; 1: inner regional; 2: outer regional or more remote area
+Language: Main language of the participant. 0: non-English; 1: English
+Smoker: 0: No; 1: Yes
+Risky_alcohol: Consuming alcohol at a risky level. 0: No; 1: Yes
+Psyc_distress: Numeric variable ranged from 10 to 50. Higher value represents higher level of psychological distress
+Age: Age of the participant 
+
 
 ```{r}
 smk_data$remoteness <- as.factor(smk_data$remoteness)
 ```
 
 #Matching Funktion wird ausgeführt, um die Gruppen vergleichbar zu machen.
+#Diese Funktion würde ich einmal illustrieren: Erst Propensity Score für alle Individuen, dann Nearest-Neighbour ein Match auswählen. 
 
 ```{r}
 smk_matching <- matchit(smoker ~ sex + indigeneity + high_school + partnered + remoteness + language + risky_alcohol + age, data = smk_data, method = "optimal", distance = "glm")
