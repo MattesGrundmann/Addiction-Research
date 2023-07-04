@@ -10,13 +10,9 @@
 
 ### Abstract
 
-Randomized controlled trials (RCTs) are the gold standard for making causal inferences,
-but RCTs are often not feasible in addiction research for ethical and logistic reasons.
-Observational data from real-world settings have been increasingly used to guide clinical
-decisions and public health policies. This paper introduces the potential outcomes framework for causal inference and summarizes well-established causal analysis methods for observational data, including matching, inverse probability treatment weighting, the
-instrumental variable method and interrupted time-series analysis with controls. It provides examples in addiction research and guidance and analysis codes for conducting these analyses with example data sets.
-
-- [ ] You can upload and include figures, too
+While Randomized Controlled Trials (RCTs) are the gold standard for causal inference, these are often not feasible in addiction research for ethical and logistic reasons; for example, when studying the impact of smoking on cancer. 
+Instead, observational data from real-world settings are increasingly being used to inform clinical decisions and public health policies. This paper presents the framework for potential outcomes for causal inference and summarizes best practices in causal analysis for observational data. Among them: Matching, Inverse Probability Weighting (IPW), and Interrupted Time-Series Analysis (ITSA). 
+These methods will be explained using examples from addiction research, and the resulting results will be compared.
 
 ### Background
 ### Explanation Matching and Inverse Probability Weighting
