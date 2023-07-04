@@ -9,6 +9,7 @@ Zwar sind Randomisiert Kontrollierte Studien (RCTs) der Goldstandard für kausal
 Stattdessen werden Beobachtungsdaten aus der realen Welt zunehmend als Grundlage für klinische Entscheidungen und gesundheitspolitische Maßnahmen verwendet. In diesem Beitrag wird der Rahmen für potenzielle Ergebnisse für kausale Schlussfolgerungen vorgestellt und es werden bewährte Methoden der Kausalanalyse für Beobachtungsdaten zusammengefasst. Darunter: Matching, Inverse Probability Weighting (IPW) und Interrupted Time-Series Analysis (ITSA). 
 Diese Methoden werden anhand von Beispielen aus der Suchtforschung erläutert sowie die daraus entstandenen Ergebnisse verglichen. 
 ```{r}
+Benötigte Packages und Bibliotheken: 
 install.packages("tidyverse", dependencies = TRUE)
 install.packages("lmtest", dependencies = TRUE)
 install.packages("sandwich", dependencies = TRUE)
