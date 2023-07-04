@@ -72,24 +72,61 @@ coefci(smk_model2, vcov. = vcovCL, cluster = ~subclass, level = 0.95)
 ```
 
 Appendix 2
+##Inverse Probability Treatment Weighting
+
+Inverse Probability Weighting (IPW) is a statistical technique used in observational studies to estimate the causal effect of a treatment or intervention. Its primary objective is to address potential confounding variables and (like the matching method) achieve balance between the treatment and control groups. In IPW, propensity scores are calculated for each individual in the study population. These scores represent the probability of receiving the treatment, given a set of observed covariates, like in this case religion or education. 
+Once the propensity scores are obtained, weights are assigned to each individual based on their propensity score. Individuals in the treatment group are assigned weights that are the inverse of their propensity score, while individuals in the control group are assigned weights derived from the inverse of one minus the propensity score. These weights help balance the groups by giving more weight to individuals who are less likely to receive the treatment, and vice versa.
+The weighted data is then used to estimate the causal effect of the treatment using appropriate statistical methods such as regression models or stratification techniques.
+
+#Balance the groups
 
 ```{r}
 #Here starts the part for IPTW method. The same data is being used, with remoteness variable recoded as factor variable.
 
 smk_iptw <- ps(smoker ~ sex + indigeneity + high_school + partnered + remoteness + language + risky_alcohol + age, interaction.depth = 3, data = as.data.frame(smk_data), n.tree = 5000, estimand = "ATE", verbose = FALSE)
 
-plot(smk_iptw)
 bal.table(smk_iptw)
 ```
+
+The ps()-function is being used to estimate the propensity scores. The variable smoker is the outcome variable, and the other variables listed are the predictors used to predict the likelihood of being a smoker (Receiving the Treatment).
+The result is stored in the smk_iptw object, which can then be further used for estimating the causal effect of the treatment on smoking behavior.
+
+The command "bal.table(smk_iptw)" calculates a balance table for the variables in relation to the created propensity score model "smk_iptw".
+In this case, the focus is on the first and third table and on the column "std. eff. sz". In the first table, there are substantial differences in all variables in the original data between the two groups (> 0.1). Compared to that, in the third table, which represents the weighted data, the differences are close to 0. So a much better balance between the groups regarding the covariates is achieved. 
+
+```{r}
+plot(smk_iptw)
+
+```
+#Extract the weights
 
 ```{r}
 #extract the weights
 smk_data$weight <- get.weights(smk_iptw, stop.method = "es.mean")
+```
+With the previous step, the weights can now be extracted.
+The get.weights()-function is used to calculate the weights for the observations based on the propensity score analysis. The relevant object was defined above as smk_iptw. This object contains the necessary information to compute the weights. 
+By executing this code, the propensity score weights are calculated for each observation in the "smk_data" dataset and stored in the newly created "weight" variable. 
 
-#Schätzung des Treatment Effekts
+#Estimate the Treatment Effect
+
+```{r}
+
+#Estimate the Treatment Effect
+
 design_iptw <- svydesign(ids = ~1, weights = ~weight, data = smk_data)
 smk_model3 <- svyglm(psyc_distress ~ smoker, design = design_iptw)
 summary(smk_model3)
+```
+After using IPTW, the Treatment Effect can now be estimated.
+The function svyglm() estimates a generalized linear model (glm) for psychological distress (psyc_distress) based on the variable smoker.
+The model is fitted using the previously created survey design design_iptw with inverse probability weighting. The results of the model are assigned to the variable smk_model3. 
+The following summary ()-function provides the results from the smk_model3. It includes statistical information such as estimates, standard errors, p-values, and confidence intervals for the estimated model coefficients. 
+By running these code snippets, estimates, summaries, and confidence intervals are computed for the relationship between smoking and psychological distress. The results can be used to analyze the impact of smoking on mental health and draw conclusions. By using Inverse Probability Weighting before, we got a much better estimate for the causal relationship between smoking and psychiological distress by migate the impact of the confounding variables and create balance between treatment and control group. 
+
+In this case, the analysis estimates that smoking leads to an increase of 1.73 points in psychological distress compared to non-smokers. 
+
+```{r}
 confint(smk_model3)
 ```
 
