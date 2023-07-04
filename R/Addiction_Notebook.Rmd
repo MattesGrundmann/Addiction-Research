@@ -58,23 +58,23 @@ The following example illustrates estimating the causal effect of smoking on pyc
 Primarly, all smokers need to be matched to a non-smoker from the control group. 
 ```{r}
 smk_matching <- matchit(smoker ~ sex + indigeneity + high_school + partnered + remoteness + language + risky_alcohol + age, data = smk_data, method = "optimal", distance = "glm")
-
-#Um die Daten komprimiert auszugeben wird hier die summary Funktion für den gematchten Datensatz angewendet.
 summary(smk_matching)
 ```
 
-#Anschließend werden die Daten für mehr Übersichtlichkeit geplottet, man sieht, dass die Mean Difference jetzt deutlich geringer geworden ist.
-
+To highlight the difference in the matched and unmatched data set concerning the adjustment of all social dempgraphic variables:
 ```{r}
 plot(summary(smk_matching), abs=FALSE)
 ```
 
-#Nachdem die Gruppen vergleichbar gemacht wurden, wird jetzt mittels Regression etc. der Effect von Rauchen auf Psyche gemessen.
-
+To estimate the the treatment effect of smoking on social distress a linear regression is used:
 ```{r}
 matched_data <- match.data(smk_matching)
 smk_model1 <- lm(psyc_distress ~ smoker, data = matched_data, weights = weights)
 summary(smk_model1)
+```
+
+For inference the results we need to we will need to calculate the cluster-robust standard error and the corresponding confidence interval:
+```{r}
 coeftest(smk_model1, vcov. = vcovCL, cluster = ~subclass)
 coefci(smk_model1, vcov. = vcovCL, cluster = ~subclass, level = 0.95)
 ```
