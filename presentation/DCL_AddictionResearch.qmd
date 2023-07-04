@@ -1,8 +1,11 @@
 ---
-title: "KausInf"
+title: "DCL Real Data Example: Addiction Research"
 author: "Mattes Grundmann, Oya Bazer, Jakob Zschocke"
 date: "2023-06-07"
-output: html_document
+format: 
+  html:
+    code-fold: true
+    code-tools: true
 ---
 
 ### Introduction:
