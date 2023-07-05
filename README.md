@@ -25,7 +25,7 @@ IPTW is a statistical technique used in observational studies to estimate the ca
 Once the propensity scores are obtained, weights are assigned to each individual based on their propensity score. These weights help balance the groups by giving more weight to individuals who are less likely to receive the treatment, and vice versa.
 The weighted data is then used to estimate the causal effect of the treatment using appropriate statistical methods such as regression models or stratification techniques.
 
-#### Interrupted Time-Series Analysis
+### Interrupted Time-Series Analysis
 
 With the goal of altering a population-level outcome, numerous public health interventions are put into action, such as the rate of hospital emergency presentations due to excessive alcohol consumption. Interrupted Time Series Analysis, a statistical technique using observational data, examines the impact of interventions by analyzing changes in a time series before and after the intervention. It separates intervention effects from other factors, employing a control group for a counterfactual scenario. This method has broad applications in public health, economics, social sciences, and policy evaluation. It enables decision-makers to make informed choices and optimize policies. Interrupted Time Series Analysis is a powerful tool for understanding causal effects, evaluating interventions, and improving well-being.
 
