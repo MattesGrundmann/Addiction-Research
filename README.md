@@ -27,18 +27,7 @@ The weighted data is then used to estimate the causal effect of the treatment us
 
 #### Interrupted Time-Series Analysis
 
-Unter Verwendung von Daten aus wiederholten Beobachtungen eines Ergebnisses wird in einer unterbrochenen Zeitreihenanalyse (ITSA) die Entwicklung des Ergebnisses vor und nach der Intervention.
-Dies kann konzeptualisiert werden auf der Grundlage des kontrafaktischen Rahmens als Vergleich dessen was ohne die Intervention geschehen wäre (ein kontrafaktisches Szenario) mit dem, was nach einer Intervention beobachtet wurde. 
-Eine Kontrollreihe, bei der die Intervention nicht durchgeführt wird, kann um die kausale Schlussfolgerung zu verstärken.
-
-Es ist auch wichtig, dass eine vergleichbare Kontrollreihe aus einer Population ausgewählt wird, die derjenigen, die der Intervention ausgesetzt ist, möglichst ähnlich ist
-mit Ausnahme der Tatsache, dass die eine die Intervention erhält und eine nicht. Die Kontrollreihe kann beispielsweise von einem anderen Ort mit ähnlichen Bevölkerungsmerkmalen stammen, oder sie kann aus dem historischen Trend in derselben Population stammen.
-
-Eine unterbrochene Zeitreihenanalyse mit Kontrolle basiert häufig auf das Regressionsmodell:
-
-Y<sub>t</sub> = &beta;<sub>0</sub> + &beta;<sub>1</sub>(time) + &beta;<sub>2</sub>(post intervention) + &beta;<sub>3</sub>(post intervention &times; time)  + &beta;<sub>4</sub>(group) + &beta;<sub>5</sub>(group &times; time) + &beta;<sub>6</sub>(group &times; post intervention) + &beta;<sub>7</sub>(time &times; post intervention &times; group) + &epsilon;<sub>t</sub>
-
-![](figures/InterruptedTimeSeriesAnalysis.png)
+With the goal of altering a population-level outcome, numerous public health interventions are put into action, such as the rate of hospital emergency presentations due to excessive alcohol consumption. Interrupted Time Series Analysis, a statistical technique using observational data, examines the impact of interventions by analyzing changes in a time series before and after the intervention. It separates intervention effects from other factors, employing a control group for a counterfactual scenario. This method has broad applications in public health, economics, social sciences, and policy evaluation. It enables decision-makers to make informed choices and optimize policies. Interrupted Time Series Analysis is a powerful tool for understanding causal effects, evaluating interventions, and improving well-being.
 
 ### Results & Interpretation
 
