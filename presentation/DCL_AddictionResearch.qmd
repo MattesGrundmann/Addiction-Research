@@ -1,7 +1,7 @@
 ---
 title: "DCL Real Data Example: Addiction Research"
-author: "Mattes Grundmann, Oya Bazer, Jakob Zschocke"
-date: "2023-06-07"
+authors: "Mattes Grundmann, Oya Bazer, Jakob Zschocke"
+date: "2023-07-04"
 format: 
   html:
     code-fold: true
@@ -10,7 +10,7 @@ format:
 
 ### Introduction:
 
-While Randomized Controlled Trials (RCTs) are the gold standard for causal inference, these are often not feasible in addiction research for ethical and logistic reasons; for example, when studying the impact of smoking on cancer.
+While Randomized Controlled Trials (RCTs) are the gold standard for causal inference, they are often not feasible in addiction research for ethical and logistic reasons; for example, when studying the impact of smoking on cancer.
 
 Instead, observational data from real-world settings are increasingly being used to inform clinical decisions and public health policies. This paper presents the framework for potential outcomes for causal inference and summarizes best practices in causal analysis for observational data. Among them: Matching, Inverse Probability Weighting (IPW), and Interrupted Time-Series Analysis (ITSA).
 
@@ -51,22 +51,22 @@ smk_data <- read_csv("https://raw.githubusercontent.com/gckc123/Causal_Analysis_
 
 #### It contains the following variables:
 
-Sex: 0: Female; 1: Male\
-Indigeneity: 0: non-indigenous; 1: indigenous\
-High_school: 0: not completed high school; 1: completed high school\
-Partnered: 0: not partnered; 1: partnered\
-Remoteness: Remoteness of an individual's residence, ("factor" variable). 0: major cities; 1: inner regional; 2: outer regional or more remote area\
-Language: Main language of the participant. 0: non-English; 1: English\
-Smoker: 0: No; 1: Yes\
-Risky_alcohol: Consuming alcohol at a risky level. 0: No; 1: Yes\
-Psyc_distress: Numeric variable ranged from 10 to 50. Higher value represents higher level of psychological distress\
-Age: Age of the participant
+[Sex]{.underline}: 0: Female; 1: Male\
+[Indigeneity]{.underline}: 0: non-indigenous; 1: indigenous\
+[High_school]{.underline}: 0: not completed high school; 1: completed high school\
+[Partnered]{.underline}: 0: not partnered; 1: partnered\
+[Remoteness]{.underline}: Remoteness of an individual's residence, ("factor" variable). 0: major cities; 1: inner regional; 2: outer regional or more remote area\
+[Language]{.underline}: Main language of the participant. 0: non-English; 1: English\
+[Smoker]{.underline}: 0: No; 1: Yes\
+[Risky_alcohol]{.underline}: Consuming alcohol at a risky level. 0: No; 1: Yes\
+[Psyc_distress]{.underline}: Numeric variable ranged from 10 to 50. Higher value represents higher level of psychological distress\
+[Age]{.underline}: Age of the participant
 
 ```{r include = FALSE}
 smk_data$remoteness <- as.factor(smk_data$remoteness)
 ```
 
-#### Method 1: Matching
+### Method 1: Matching
 
 The goal of matching is to establish the balance between treatment and control group, as it generally is in RTCs. Specificly, it targets similar distributions of all observed covariates in both treatment and control group. A variant of matching is one-to-one matching which matches each individual in the treatment group with an individual in the control group based on a propensity score. This score represents the probability of receiving the treatment, measured by all variables that can influence it. It is often estimated using logistic regression with pretreatment covariates. Unmatched individuals will be excluded. After matching, the Average Treatment effect among the Treated (ATT) can now be calculated using simple regression.
 
@@ -107,7 +107,7 @@ coeftest(smk_model2, vcov. = vcovCL, cluster = ~subclass)
 coefci(smk_model2, vcov. = vcovCL, cluster = ~subclass, level = 0.95)
 ```
 
-#### Method 2: Inverse Probability Treatment Weighting
+### Method 2: Inverse Probability Treatment Weighting
 
 Inverse Probability Weighting (IPW) is a statistical technique used in observational studies to estimate the causal effect of a treatment or intervention. Its primary objective is to address potential confounding variables and (like the matching method) achieve balance between the treatment and control groups. In IPW, propensity scores are calculated for each individual in the study population. These scores represent the probability of receiving the treatment, given a set of observed covariates, like in this case religion or education. Once the propensity scores are obtained, weights are assigned to each individual based on their propensity score. Individuals in the treatment group are assigned weights that are the inverse of their propensity score, while individuals in the control group are assigned weights derived from the inverse of one minus the propensity score. These weights help balance the groups by giving more weight to individuals who are less likely to receive the treatment, and vice versa. The weighted data is then used to estimate the causal effect of the treatment using appropriate statistical methods such as regression models or stratification techniques.
 
@@ -150,7 +150,7 @@ smk_model3 <- svyglm(psyc_distress ~ smoker, design = design_iptw)
 summary(smk_model3)
 ```
 
-After using IPTW, the Treatment Effect can now be estimated. The function svyglm() estimates a generalized linear model (glm) for psychological distress (psyc_distress) based on the variable smoker. The model is fitted using the previously created survey design design_iptw with inverse probability weighting. The results of the model are assigned to the variable smk_model3. The following summary ()-function provides the results from the smk_model3. It includes statistical information such as estimates, standard errors, p-values, and confidence intervals for the estimated model coefficients. By running these code snippets, estimates, summaries, and confidence intervals are computed for the relationship between smoking and psychological distress. The results can be used to analyze the impact of smoking on mental health and draw conclusions. By using Inverse Probability Weighting before, we got a much better estimate for the causal relationship between smoking and psychological distress by migate the impact of the confounding variables and create balance between treatment and control group.
+After using IPTW, the treatment effect can now be estimated. The function svyglm() estimates a generalized linear model (glm) for psychological distress (psyc_distress) based on the variable smoker. The model is fitted using the previously created survey design design_iptw with inverse probability weighting. The results of the model are assigned to the variable smk_model3. The following summary ()-function provides the results from the smk_model3. It includes statistical information such as estimates, standard errors, p-values, and confidence intervals for the estimated model coefficients. By running these code snippets, estimates, summaries, and confidence intervals are computed for the relationship between smoking and psychological distress. The results can be used to analyze the impact of smoking on mental health and draw conclusions. By using Inverse Probability Weighting before, we got a much better estimate for the causal relationship between smoking and psychological distress by migate the impact of the confounding variables and create balance between treatment and control group.
 
 In this case, the analysis estimates that smoking leads to an increase of 1.73 points in psychological distress compared to non-smokers.
 
@@ -165,52 +165,61 @@ summary(smk_model4)
 confint(smk_model4)
 ```
 
-### In this part, the effect of the minimum alcohol pricing on alcohol consumption at the population level is estimated in Northern Territory, Australia, using interrupted time series analysis.
+### Method 3: Interrupted Time Series Analysis
 
-### The dataset contains 5 variables
+With the goal of altering a population-level outcome, numerous public health interventions are put into action, such as the rate of hospital emergency presentations due to excessive alcohol consumption. Interrupted Time Series Analysis, a statistical technique using observational data, examines the impact of interventions by analyzing changes in a time series before and after the intervention. It separates intervention effects from other factors, employing a control group for a counterfactual scenario. This method has broad applications in public health, economics, social sciences, and policy evaluation. It enables decision-makers to make informed choices and optimize policies. Interrupted Time Series Analysis is a powerful tool for understanding causal effects, evaluating interventions, and improving well-being.
 
-alcohol: measure of population level alcohol consumption in a month. time: time measures in months state: "NT": Northern Territory; "WA" Western Australia intervention: Whether the time point is pre or post intervention. 0: Pre-intervention; 1: Post-intervention. season: Season of the year. 1: Spring; 2: Summer; 3: Autumn; 4: Winter
+#### In this part, the effect of the minimum alcohol pricing on alcohol consumption at the population level is estimated in Northern Territory, Australia, on the basis of the following (observational) data set:
 
 ```{r message = FALSE, warning = FALSE}
 #load the dataset
 alc_mup_data <- read_csv("https://statsnotebook.io/blog/data_management/example_data/alcohol_data_NTWA.csv")
+```
 
-#state and intervention variables are being converted into factor.
+#### The dataset contains 5 variables, as follows:
+
+[Alcohol]{.underline}: measure of population level alcohol consumption in a month.\
+[Time]{.underline}: time measures in months\
+[State]{.underline}: "NT": Northern Territory; "WA" Western Australia\
+[Intervention]{.underline}: Whether the time point is pre or post intervention. 0: Pre-intervention; 1: Post-intervention.\
+[Season]{.underline}: Season of the year. 1: Spring; 2: Summer; 3: Autumn; 4: Winter
+
+```{r message = FALSE, warning = FALSE}
 alc_mup_data$state <- factor(alc_mup_data$state, exclude = c("", NA))
 alc_mup_data$intervention <- factor(alc_mup_data$intervention, exclude = c("", NA))
 
-#relevel() function is being used to set the reference level of the state variable to be “WA” (Western Australia).
 alc_mup_data$state <- relevel(alc_mup_data$state, ref="WA")
-
-#the descriptive statistics can be generated by states and by pre/post intervention.
-alc_mup_data %>%
-  group_by(state, intervention) %>%
-  summarize(count = n(),
-            M_alcohol = mean(alcohol, na.rm = TRUE),
-            Mdn_alcohol = median(alcohol, na.rm = TRUE),
-            SD_alcohol = sd(alcohol, na.rm = TRUE),
-            IQR_alcohol = IQR(alcohol, na.rm = TRUE)
-  ) %>% 
-  print()
 ```
 
+#### Generating the descriptive statistics by states and by pre/post intervention:
+
+```{r message = FALSE, warning = FALSE}
+alc_mup_data %>%
+group_by(state, intervention) %>%
+summarize(count = n(),
+M_alcohol = mean(alcohol, na.rm = TRUE),
+Mdn_alcohol = median(alcohol, na.rm = TRUE),
+SD_alcohol = sd(alcohol, na.rm = TRUE),
+IQR_alcohol = IQR(alcohol, na.rm = TRUE)
+) %>%
+print()
+```
+
+#### To visualize alcohol consumption level by state and by pre/post intervention the ggplot() function is being used:
+
 ```{r}
-#Here the ggplot() function is being used to visualize alcohol consumption level by state and by pre/post intervention.
 ggplot(alc_mup_data) +
   geom_boxplot(aes(y=alcohol, x=state, fill = intervention))
 ```
 
-#### The descriptive analysis suggests that alcohol minimum pricing likely reduced alcohol consumption in the population (in NT).
+#### Estimating the intervention effect of alcohol minimum pricing on population level alcohol consumption, using gls() function:
 
 ```{r}
-#estimating the intervention effect of alcohol minimum pricing on population level alcohol consumption, using gls() function
 res <- gls(alcohol ~ time*intervention*state,
            data = alc_mup_data,
            correlation = corARMA(p = 1, form =~ time | state), method = "ML")
 summary(res)
 ```
-
-#### While alcohol consumption in the Northern Territory was higher than in Western Australia before alcohol minimum pricing, there was no significant difference in the pre-intervention trend (as indicated by the time by state interaction). Immediately after implementing minimum alcohol price, there was a significant drop in alcohol consumption in the Northern Territory but not in Western Australia (as indicated by the intervention by state interaction).
 
 ```{r}
 #generating the model-based prediction
@@ -230,37 +239,15 @@ plot <- ggplot() +
 plot
 ```
 
-Autocorrelation refers to the correlation between a time series variable and its own lagged values. In other terms, it measures how a variable is related to its past values and is a way to assess if there is a pattern or dependency within a time series. Lags, on the other hand, refer to the time intervals between the current observation and its past observations. By introducing lags, you can compare the value of a variable at a specific time point with its values at previous time points.
-
-The model has accounted for lag-1 autocorrelation. The sufficiency can be evaluated using the partial auto-correlation function. In this analysis, the auto-correlation function for Western Australia and Northern Territory need to be plotted separately.
+While alcohol consumption in the Northern Territory was higher than in Western Australia before alcohol minimum pricing, there was no significant difference in the pre-intervention trend (as indicated by the time by state interaction). Immediately after implementing minimum alcohol price, there was a significant drop in alcohol consumption in the Northern Territory but not in Western Australia (as indicated by the intervention by state interaction).
 
 ```{r}
-#extract the residuals
 alc_mup_data$residuals <- residuals(res)
-
-#plotting the partial ACF
-pacf(alc_mup_data[alc_mup_data$state == "NT",]$residuals)
-pacf(alc_mup_data[alc_mup_data$state == "WA",]$residuals)
 ```
 
-Both PACF plots suggest that it should be adjusted for up to the lag-4 auto-correlation.The analysis can be rerun by setting the p parameter to 4.
+#### To adjust for seasonality, harmonic function is being used based on sine and cosine function:
 
 ```{r}
-
-res2 <- gls(alcohol ~ time*intervention*state,
-            data = alc_mup_data,
-            correlation = corARMA(p = 4, form =~ time | state), method = "ML")
-summary(res2)
-```
-
-Adjusting for seasonality using harmonic function
-
-```{r}
-#The harmonic function is used to calculate the harmonic terms calculate based on sine and cosine function
-#the first parameter of this function specifies the time variable
-#the second specifies the number of sine and cosine pairs to include
-#the third specifies the length of the period
-
 alc_mup_data <- cbind(alc_mup_data, data.frame(harmonic(alc_mup_data$time, 1, 12)))
 alc_mup_data <- alc_mup_data %>% 
   rename(harmonic1 = X1,
@@ -272,17 +259,14 @@ summary(res)
 ```
 
 ```{r}
-#calculate the predicted value
 alc_mup_data$predicted <- res$fitted
 groups = interaction(alc_mup_data$intervention,alc_mup_data$state)
 
-#calculate the predicted linear trend for data visualisation
 alc_mup_data.linear <- alc_mup_data
 alc_mup_data.linear$harmonic1 <- 0
 alc_mup_data.linear$harmonic2 <- 0
 alc_mup_data.linear$predicted <- predict(res, alc_mup_data.linear)
 
-#plot the time series
 plot <- ggplot() +
   geom_point(data = alc_mup_data, aes(y = alcohol, x = time, color = state)) +
   geom_line(data = alc_mup_data, aes(y = predicted, x = time, color = state, group = groups), linetype = "dashed") +
@@ -297,7 +281,7 @@ plot
 
 In conclusion, we have explored three powerful methods in causal inference which are part of the case study "Causal inference with observational data in addiction research": Matching, Inverse Probability Treatment Weighting (IPTW), and Time Series Analysis. Each of these methods offers unique approaches to address causal questions in observational data. To explain Matching and IPTW the used study investigates the causal effect of smoking on psychological distress.
 
-We saw, that Matching is a valuable technique that aims to create comparable treatment and control groups by pairing observations based on their similarity in propensity scores. IPTW assigning weights to observations based on their propensity scores, effectively balancing treatment and control groups. So these two methods have the same goal by creating balance between treatment and control group und thereafter on that base estimating the Average Treatment Effect.
+We saw, that matching is a valuable technique that aims to create comparable treatment and control groups by pairing observations based on their similarity in propensity scores. IPTW assigning weights to observations based on their propensity scores, effectively balancing treatment and control groups. So these two methods have the same goal by creating balance between treatment and control group und thereafter on that base estimating the Average Treatment Effect.
 
 Time Series Analysis, on the other hand, allows us to explore the dynamics and relationships among variables over time. It provides insights into the causal effects of interventions or treatments by examining how changes in one variable influence another variable in a time-dependent manner.
 
